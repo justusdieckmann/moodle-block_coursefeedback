@@ -108,25 +108,14 @@ if (isset($form) && get_parent_class($form) === "coursefeedbackform" && $form->i
                 if ($data->name && isset($data->template)) {
                     if ($DB->record_exists("block_coursefeedback", ["id" => intval($data->template)])) {
                         // Copying / duplicating feedback.
-                        if (block_coursefeedback_copy_feedback($data->template, $data->name, $data->heading,
-                                $data->infotext['text'], $data->infotext['format'])) {
-                            $statusmsg = get_string("changessaved");
-                        } else {
-                            $errormsg = get_string("therewereerrors", "admin");
-                        }
+                        block_coursefeedback_copy_feedback($data->template, $data->name, $data->heading,
+                                $data->infotext['text'], $data->infotext['format']);
+                        $statusmsg = get_string("changessaved");
                     } else {
-                        // Creating new fedback.
-                        switch (block_coursefeedback_insert_feedback($data->name, $data->heading,
-                                $data->infotext['text'], $data->infotext['format'])) {
-                            case -1:
-                                $errormsg = get_string("semicolonerror", "block_coursefeedback");
-                                break;
-                            case 0:
-                                $errormsg = get_string("therewereerrors", "admin");
-                                break;
-                            default:
-                                $statusmsg = get_string("changessaved");
-                        }
+                        // Creating new feedback.
+                        block_coursefeedback_insert_feedback($data->name, $data->heading,
+                                $data->infotext['text'], $data->infotext['format']);
+                        $statusmsg = get_string("changessaved");
                     }
                 } else {
                     $errormsg = get_string("therewereerrors", "admin");
@@ -155,12 +144,9 @@ if (isset($form) && get_parent_class($form) === "coursefeedbackform" && $form->i
         case "feedbackedit":
             if ($form->is_validated()) {
                 if ($data->name && isset($data->template)) {
-                    if (block_coursefeedback_edit_feedback($data->template, $data->name, $data->heading,
-                            $data->infotext['text'], $data->infotext['format'])) {
-                        $statusmsg = get_string("changessaved");
-                    } else {
-                        $errormsg = get_string("error");
-                    }
+                    block_coursefeedback_edit_feedback($data->template, $data->name, $data->heading,
+                            $data->infotext['text'], $data->infotext['format']);
+                    $statusmsg = get_string("changessaved");
                 } else {
                     $errormsg = get_string("therewereerrors", "admin");
                 }

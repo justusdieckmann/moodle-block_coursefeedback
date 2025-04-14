@@ -88,91 +88,81 @@ function block_coursefeedback_order_questions(int $feedbackid): bool {
 }
 
 /**
- * If the function returns a negative number, it indicates a false validation (i.e. use of blacklisted characters).
+ * Inserts a survey.
  *
  * @param string $feedbackname
  * @param string $heading
  * @param string $infotext
+ * @param int $infotextformat
  * @param bool $returnid Should the id of the newly created record entry be returned?
- * @return int|bool - record id or false on failure.
+ * @return int|bool Record id if $returnid, or true.
  */
-function block_coursefeedback_insert_feedback($feedbackname, $heading = null, $infotext = null, $infotextformat = null,
-        $returnid = true) {
+function block_coursefeedback_insert_feedback(string $feedbackname, string $heading = null, string $infotext = null,
+                                              int $infotextformat = null, bool $returnid = true): int|bool {
     global $DB;
 
-    if (strpos($feedbackname, ";") === false) {
-        $record = new stdClass();
-        $record->name = $feedbackname;
-        $record->timemodified = time();
-        $record->heading = $heading;
-        $record->infotext = $infotext;
-        $record->infotextformat = $infotextformat;
+    $record = new stdClass();
+    $record->name = $feedbackname;
+    $record->timemodified = time();
+    $record->heading = $heading;
+    $record->infotext = $infotext;
+    $record->infotextformat = $infotextformat;
 
-        return $DB->insert_record("block_coursefeedback", $record, $returnid);
-    } else {
-        return -1;
-    }
+    return $DB->insert_record("block_coursefeedback", $record, $returnid);
 }
 
 /**
- * If the return is a negative number, it indicates a false validation (i.e. use of blacklisted characters).
+ * Updates a Survey.
  *
  * @param int $feedbackid
  * @param string $feedbackname
  * @param string $heading
  * @param string $infotext
- * @return int|bool - Success of operation.
+ * @param int $infotextformat
+ * @return void
  */
-function block_coursefeedback_edit_feedback($feedbackid, $feedbackname, $heading = null, $infotext = null, $infotextformat = null) {
+function block_coursefeedback_edit_feedback(int $feedbackid, string $feedbackname, string $heading = null,
+                                            string $infotext = null, int $infotextformat = null): void {
     global $DB;
 
-    if (strpos($feedbackname, ";")) {
-        return -1;
-    }
+    $record = new stdClass();
+    $record->id = $feedbackid;
+    $record->name = $feedbackname;
+    $record->timemodified = time();
+    $record->heading = $heading;
+    $record->infotext = $infotext;
+    $record->infotextformat = $infotextformat;
 
-    if ($record = $DB->get_record("block_coursefeedback", ["id" => $feedbackid])) {
-        $record->name = $feedbackname;
-        $record->timemodified = time();
-        $record->heading = $heading;
-        $record->infotext = $infotext;
-        $record->infotextformat = $infotextformat;
-
-        return clean_param($DB->update_record("block_coursefeedback", $record), PARAM_BOOL);
-    } else {
-        return false;
-    }
+    $DB->update_record("block_coursefeedback", $record);
 }
 
 /**
- * If the function returns a negative number, it indicates a false validation (i.e. use of blacklisted characters).
+ * Copies a survey with questions and returns the new id.
  *
- * @param int $oldfbid
- * @param int $fbname
- * @param string $heading
- * @param string $infotext
- * @return int|false - $newid or false.
+ * @param int $oldfbid The old survey id.
+ * @param string $fbname The new survey name.
+ * @param string $heading The new heading.
+ * @param string $infotext The new infotext.
+ * @param int $infotextformat The moodle infotext format.
+ * @return int The new id.
  */
-function block_coursefeedback_copy_feedback($oldfbid, $fbname, $heading = null, $infotext = null, $infotextformat = null) {
+function block_coursefeedback_copy_feedback(int $oldfbid, string $fbname, string $heading = null,
+                                            string $infotext = null, int $infotextformat = null): int {
     global $DB;
-    $oldfbid = clean_param($oldfbid, PARAM_INT);
-    $newid = block_coursefeedback_insert_feedback($fbname, $heading, $infotext, $infotextformat);
-
-    if ($newid === -1) {
-        return -1;
-    } else if ($newid > 0 && $questions = $DB->get_records("block_coursefeedback_questns", ["coursefeedbackid" => $oldfbid])) {
-        $a = $newid;
+    $transaction = $DB->start_delegated_transaction();
+    try {
+        $newid = block_coursefeedback_insert_feedback($fbname, $heading, $infotext, $infotextformat);
+        $questions = $DB->get_records("block_coursefeedback_questns", ["coursefeedbackid" => $oldfbid]);
         foreach ($questions as $question) {
-            if (!block_coursefeedback_insert_question(
-                    $question->question, $newid, $question->questionid, $question->language, $question->questiontype)) {
-                // If one fails the whole operation fails.
-                $a = false;
-                // Remove inserted and not correctly duplicated fb.
-                block_coursefeedback_delete_feedback($newid);
-                break;
-            }
+            block_coursefeedback_insert_question($question->question, $newid, $question->questionid,
+                $question->language, $question->questiontype);
         }
+        $transaction->allow_commit();
+    } catch (Exception $e) {
+        $transaction->rollback($e);
+        throw $e;
     }
-    return $a;
+    return $newid;
 }
 
 /**
