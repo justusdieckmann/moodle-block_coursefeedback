@@ -36,10 +36,14 @@ $organization = organization::get_record(['id' => $id], MUST_EXIST);
 
 $PAGE->set_url(new moodle_url('/blocks/coursefeedback/organization.php', ['id' => $id]));
 $PAGE->set_context($context);
-$title = $organization->get('name');
+$title = 'Evaluationsübersicht: Fakultät für Mathematik';
 $PAGE->set_heading($title);
 $PAGE->set_title($title);
 
+get_user_capability_contexts()
+
 echo $OUTPUT->header();
+
+echo $OUTPUT->render_from_template('block_coursefeedback/organization', []);
 
 echo $OUTPUT->footer();

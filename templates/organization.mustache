@@ -1,0 +1,139 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template block_coursefeedback/edit_survey
+
+    This template renders the editing of a survey.
+
+    Example context (json):
+    {
+    }
+
+}}
+
+<div class="mockup mt-4">
+    <h4>Standardeinstellungen</h4>
+    <ul>
+        <li>Evaluationszeitraum: 08.05.2026 - 15.05.2026 <a href="#">{{#pix}}t/edit{{/pix}}</a></li>
+        <li><a href="#">Übersetzung Campus-Lehrveranstaltungstyp zu interner Veranstaltungsart</a></li>
+        <li><a href="#">Standardfragebogen pro Veranstaltungsart</a></li>
+    </ul>
+</div>
+
+<div style="margin-top: 50px"></div>
+
+<h4>Campus-Kurse ohne Zuordnung</h4>
+<table class="generaltable">
+    <thead>
+        <tr>
+            <th></th>
+            <th>Lehrveranstaltung</th>
+            <th>Lehrveranstaltungsnummer</th>
+            <th>Veranstaltungsart</th>
+            <th>Dozierende</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><input type="checkbox"></td>
+            <td>Analysis III</td>
+            <td>150204</td>
+            <td>Vorlesung</td>
+            <td><b>Prof. Dr. Christian Lehn</b> <a href="mailto:stuff">{{#pix}}t/email{{/pix}}</a></td>
+            <td><a href="#"><i class="icon fas fa-link fa-fw"></i></a></td>
+        </tr>
+        <tr>
+            <td><input type="checkbox"></td>
+            <td>Seminar zu Kurven und Flächen</td>
+            <td>150532</td>
+            <td>Seminar</td>
+            <td>
+                <b><a href="#">Prof. Dr. Leonie Reineke</a></b> <a href="mailto:stuff">{{#pix}}t/email{{/pix}}</a>,
+                Prof. Dr. Stefan Suhr <a href="mailto:stuff">{{#pix}}t/email{{/pix}}</a>
+            </td>
+            <td><a href="#"><i class="icon fas fa-link fa-fw"></i></a></td>
+        </tr>
+    </tbody>
+</table>
+
+<div style="margin-top: 50px"></div>
+
+<h4 class="mt-5">Evaluationen</h4>
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Moodle-Kurs</th>
+        <th>Evaluationszeitraum</th>
+        <th>Lehrende</th>
+        <th>Campus-Veranstaltung</th>
+        <th>Veranstaltungsart</th>
+        <th>Fragebogen</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td rowspan="2" class="align-middle"><a href="#">Lineare Algebra I WS 25/26</a></td>
+        <td rowspan="2" class="align-middle">08.05.-15.05.</td>
+        <td rowspan="2" class="align-middle"><a href="#">Prof. Dr. Carl Friedrich Gauss</a></td>
+        <td>Lineare Algebra I (150794)</td>
+        <td>Vorlesung</td>
+        <td>Fragebogen Mathematik V</td>
+        <td rowspan="2" class="align-middle"><a href="#">{{#pix}}t/edit{{/pix}}</a></td>
+    </tr>
+    <tr>
+        <td>Übung für Lineare Algebra (150795)</td>
+        <td>Übung</td>
+        <td>Fragebogen Mathematik Ü</td>
+    </tr>
+    <tr>
+        <td rowspan="1"><a href="#">Stochastik für Nicht-Mathematiker:innen WS 25/26</a></td>
+        <td rowspan="1"><b>16.05.-30.05.</b></td>
+        <td rowspan="1"><a href="#">Prof. Dr. Simon Fisch</a></td>
+        <td>Stochastik für Nicht-Mathematiker:innen</td>
+        <td>Vorlesung</td>
+        <td>Fragebogen Mathematik V</td>
+        <td rowspan="1"><a href="#">{{#pix}}t/edit{{/pix}}</a></td>
+    </tr>
+    <!--<tr class="table-light">
+        <td>Übung für Lineare Algebra (150795)</td>
+        <td>Übung</td>
+        <td>Fragebogen Mathematik Ü</td>
+    </tr>-->
+    </tbody>
+</table>
+
+<div style="margin-top: 50px"></div>
+
+<h4 class="mt-5">Moodle-Kurse ohne Evaluationen</h4>
+<table class="generaltable mt-3">
+    <thead>
+    <tr>
+        <th>Moodle-Kurs</th>
+        <th>Lehrende</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td><a href="">Topografie für Dummies WS 25/26</a></td>
+        <td><a href="">Patrick Professor</a></td>
+        <td><a href="#"><i class="icon fas fa-link fa-fw"></i></a></td>
+    </tr>
+    </tbody>
+</table>
